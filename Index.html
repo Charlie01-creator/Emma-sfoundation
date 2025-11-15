@@ -1,433 +1,1721 @@
-<!--
-Complete, production-ready single-file portfolio website for Charles.
-Features added in this redesign:
- - Fully responsive layout (mobile-first)
- - Accessible, semantic HTML + ARIA where needed
- - Sticky navigation with smooth scroll and active link state
- - Hero with typed headline animation and CTA
- - Filterable portfolio grid with lazy-loaded images and case-study modal
- - Project detail pages as JSON-LD linked data (inline) for SEO
- - Pricing table, feature comparison, and contact booking (Formspree + mailto fallback)
- - Blog index mockup with SEO-friendly article cards
- - Downloadable resume link, print-friendly CSS
- - Dark / Light theme with system preference detection
- - Performance optimizations: image srcset, lazy-loading, minimized JS, preconnect for fonts
- - Microinteractions: hover effects, subtle motion, toast on form submit
- - Comments in the code explaining where to replace placeholders
-
-Instructions:
- - Replace placeholder images (via.placeholder.com) with your real images (prefer WebP and multiple sizes)
- - Replace the FORM_ENDPOINT constant in the script with your Formspree endpoint or other form handler
- - Replace CONTACT_WHATSAPP_NUMBER with your WhatsApp number (in international format, e.g., 2567XXXX)
- - Save as index.html and upload to any static host (Netlify/Vercel/GitHub Pages)
--->
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Charles Semakula — Web Designer & Front-end Developer</title>
-  <meta name="description" content="Portfolio of Charles Semakula — building fast, accessible, conversion-focused websites for businesses and startups.">
-  <meta name="author" content="Charles Semakula">
-  <meta name="theme-color" content="#0f1724">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alex Morgan | Web Design & Development</title>
+    <meta name="description" content="Professional web designer and developer creating beautiful, functional websites that drive results for businesses worldwide.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #10b981;
+            --dark: #1f2937;
+            --darker: #111827;
+            --light: #f9fafb;
+            --gray: #6b7280;
+            --gray-light: #e5e7eb;
+            --transition: all 0.3s ease;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius: 8px;
+        }
 
-  <!-- OpenGraph / Social -->
-  <meta property="og:title" content="Charles Semakula — Web Designer">
-  <meta property="og:description" content="Designing fast, conversion-focused websites. Portfolio, case studies, and services.">
-  <meta property="og:image" content="https://via.placeholder.com/1200x630?text=Charles+Semakula">
-  <meta property="og:type" content="website">
+        .dark-mode {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --dark: #f9fafb;
+            --darker: #e5e7eb;
+            --light: #1f2937;
+            --gray: #9ca3af;
+            --gray-light: #374151;
+        }
 
-  <!-- JSON-LD: Person + Organization -->
-  <script type="application/ld+json">{
-    "@context":"https://schema.org",
-    "@type":"Person",
-    "name":"Charles Semakula",
-    "url":"https://example.com",
-    "sameAs":[],
-    "jobTitle":"Web Designer & Front-end Developer",
-    "description":"I design modern, accessible, and fast websites that convert visitors into customers."
-  }</script>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  <style>
-    /* ===== Reset & Core ===== */
-    :root{--bg:#0f1724;--card:#0b1220;--muted:#98a0aa;--accent:#06b6d4;--accent-2:#7c3aed;--text:#e6eef8;--glass:rgba(255,255,255,0.03);--maxw:1200px;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial}
-    [data-theme='light']{--bg:#f7fbff;--card:#ffffff;--muted:#4b5563;--accent:#0ea5a4;--text:#071124;--glass:rgba(2,6,23,0.03)}
-    *{box-sizing:border-box}
-    html,body{height:100%}body{margin:0;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;line-height:1.5}
-    a{color:inherit}
-    .container{max-width:var(--maxw);margin:0 auto;padding:28px}
+        html {
+            scroll-behavior: smooth;
+        }
 
-    /* ===== Header ===== */
-    header{position:sticky;top:12px;z-index:40;background:linear-gradient(180deg,transparent,rgba(0,0,0,0.06));backdrop-filter:blur(6px);border-radius:12px;padding:8px}
-    .nav{display:flex;align-items:center;justify-content:space-between;padding:8px 14px}
-    .brand{display:flex;gap:12px;align-items:center}
-    .logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:700;color:white}
-    nav ul{display:flex;gap:14px;align-items:center;margin:0;padding:0;list-style:none}
-    nav a{font-weight:600;padding:8px;border-radius:8px;text-decoration:none}
-    nav a.active{background:var(--glass)}
-    .btn{background:var(--accent);padding:9px 14px;border-radius:10px;color:#021; font-weight:700;text-decoration:none}
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: var(--light);
+            transition: var(--transition);
+        }
 
-    /* ===== Hero ===== */
-    .hero{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center;padding:56px 0}
-    .kicker{display:inline-block;padding:6px 10px;border-radius:999px;background:var(--glass);color:var(--muted);font-weight:700;margin-bottom:12px}
-    h1{font-size:34px;margin:0 0 12px}
-    .typed{color:var(--accent);font-weight:800}
-    .lead{color:var(--muted);margin:0 0 18px}
-    .hero-cta{display:flex;gap:12px}
-    .mockup{border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);}
-    .mockup img{display:block;width:100%;height:auto}
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
-    /* ===== Features ===== */
-    .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:18px}
-    .feature{background:var(--card);padding:16px;border-radius:12px}
+        section {
+            padding: 100px 0;
+        }
 
-    /* ===== Portfolio ===== */
-    .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-    .filter{padding:8px 12px;border-radius:999px;background:var(--glass);cursor:pointer}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:14px}
-    .project{background:var(--card);border-radius:12px;padding:12px}
-    .project img{width:100%;height:180px;object-fit:cover;border-radius:8px}
-    .project .meta{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+        h1, h2, h3, h4 {
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
 
-    /* ===== Pricing ===== */
-    .pricing{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
-    .price{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:18px;border-radius:12px}
+        h1 {
+            font-size: 3.5rem;
+        }
 
-    /* ===== Blog ===== */
-    .articles{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+        h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
 
-    /* ===== Contact ===== */
-    .contact-grid{display:grid;grid-template-columns:1fr 320px;gap:18px}
-    .card{background:var(--card);padding:16px;border-radius:12px}
-    input,textarea,select{width:100%;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text);margin-top:8px}
-    button[type='submit']{background:var(--accent);border:0;color:#021;padding:12px 16px;border-radius:8px;font-weight:700;cursor:pointer}
+        h3 {
+            font-size: 1.5rem;
+        }
 
-    /* ===== Footer ===== */
-    footer{padding:28px 0;color:var(--muted);font-size:14px}
+        p {
+            margin-bottom: 1.5rem;
+        }
 
-    /* ===== Modal ===== */
-    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(rgba(2,6,23,0.6),rgba(2,6,23,0.6));z-index:60}
-    .modal.open{display:flex}
-    .modal-card{max-width:900px;width:100%;border-radius:12px;overflow:hidden}
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
 
-    /* ===== Utilities ===== */
-    .muted{color:var(--muted)}
-    .small{font-size:13px}
-    .hide{display:none}
+        ul {
+            list-style: none;
+        }
 
-    /* ===== Accessibility / responsive ===== */
-    @media (max-width:980px){.hero{grid-template-columns:1fr}.contact-grid{grid-template-columns:1fr}.nav{padding:8px}}
-    @media (max-width:640px){nav ul{display:none}.logo{width:40px;height:40px}}
+        img {
+            max-width: 100%;
+        }
 
-    /* Print-friendly */
-    @media print{header,footer,.btn,nav{display:none}body{background:white;color:black}}
-  </style>
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode header {
+            background-color: rgba(31, 41, 55, 0.95);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--dark);
+            transition: var(--transition);
+        }
+
+        .dark-mode .theme-toggle {
+            color: var(--light);
+        }
+
+        .mobile-menu {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding-top: 150px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 600px;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            margin-bottom: 1.5rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: var(--gray);
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .hero-image {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50%;
+            max-width: 600px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        /* Portfolio Section */
+        .portfolio {
+            background-color: var(--gray-light);
+        }
+
+        .dark-mode .portfolio {
+            background-color: var(--darker);
+        }
+
+        .portfolio-filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 20px;
+            background: transparent;
+            border: 1px solid var(--gray);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .portfolio-item {
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            background-color: var(--light);
+        }
+
+        .portfolio-item:hover {
+            transform: translateY(-10px);
+        }
+
+        .portfolio-img {
+            height: 250px;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .portfolio-info {
+            padding: 1.5rem;
+        }
+
+        .portfolio-tags {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 4px 12px;
+            background-color: var(--gray-light);
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .dark-mode .tag {
+            background-color: var(--dark);
+        }
+
+        /* About Section */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-image {
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .skills {
+            margin-top: 2rem;
+        }
+
+        .skill-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .skill-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .skill-bar {
+            height: 8px;
+            background-color: var(--gray-light);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .dark-mode .skill-bar {
+            background-color: var(--darker);
+        }
+
+        .skill-progress {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 4px;
+        }
+
+        /* Services Section */
+        .services {
+            background-color: var(--gray-light);
+        }
+
+        .dark-mode .services {
+            background-color: var(--darker);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background-color: var(--light);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .service-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .pricing {
+            margin-top: 5rem;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .pricing-card {
+            background-color: var(--light);
+            padding: 2.5rem 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .pricing-card.featured {
+            border: 2px solid var(--primary);
+            transform: scale(1.05);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .pricing-card.featured:hover {
+            transform: scale(1.05) translateY(-5px);
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 1.5rem 0;
+            color: var(--primary);
+        }
+
+        .price span {
+            font-size: 1rem;
+            color: var(--gray);
+        }
+
+        .pricing-features {
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .pricing-features li {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .pricing-features li i {
+            color: var(--secondary);
+            margin-right: 0.5rem;
+        }
+
+        /* Testimonials */
+        .testimonials-slider {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .testimonials-container {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .testimonial {
+            min-width: 100%;
+            padding: 2rem;
+            background-color: var(--light);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .testimonial-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 1.5rem;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+        }
+
+        .testimonial-role {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .slider-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .slider-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .slider-btn:hover {
+            color: var(--primary-dark);
+        }
+
+        /* Process Section */
+        .process {
+            background-color: var(--gray-light);
+        }
+
+        .dark-mode .process {
+            background-color: var(--darker);
+        }
+
+        .process-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .process-steps::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary);
+            z-index: 1;
+        }
+
+        .process-step {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+            padding: 0 1rem;
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 1.5rem;
+        }
+
+        /* Blog Section */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .blog-card {
+            background-color: var(--light);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .blog-img {
+            height: 200px;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .blog-content {
+            padding: 1.5rem;
+        }
+
+        .blog-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .blog-title {
+            margin-bottom: 1rem;
+        }
+
+        .blog-excerpt {
+            margin-bottom: 1.5rem;
+        }
+
+        .read-more {
+            color: var(--primary);
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .read-more:hover {
+            gap: 1rem;
+        }
+
+        /* FAQ Section */
+        .faq {
+            background-color: var(--gray-light);
+        }
+
+        .dark-mode .faq {
+            background-color: var(--darker);
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background-color: var(--light);
+            margin-bottom: 1rem;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem 1.5rem;
+            display: none;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        .faq-toggle {
+            transition: var(--transition);
+        }
+
+        .faq-item.active .faq-toggle {
+            transform: rotate(180deg);
+        }
+
+        /* Contact Section */
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .contact-item {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .contact-form {
+            background-color: var(--light);
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--gray-light);
+            border-radius: var(--radius);
+            background-color: var(--light);
+            color: var(--dark);
+            transition: var(--transition);
+        }
+
+        .dark-mode .form-control {
+            background-color: var(--darker);
+            border-color: var(--gray);
+            color: var(--light);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--darker);
+            color: var(--light);
+            padding: 80px 0 30px;
+        }
+
+        .dark-mode footer {
+            background-color: var(--dark);
+            color: var(--darker);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .footer-about {
+            margin-bottom: 1.5rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .social-link:hover {
+            background-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .footer-heading {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .footer-heading::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -8px;
+            width: 40px;
+            height: 2px;
+            background-color: var(--primary);
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            padding-left: 5px;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .dark-mode .copyright {
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            h1 {
+                font-size: 2.8rem;
+            }
+            
+            h2 {
+                font-size: 2.2rem;
+            }
+            
+            .hero-image {
+                width: 45%;
+            }
+            
+            .about-content, .contact-container {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .process-steps {
+                flex-direction: column;
+                gap: 3rem;
+            }
+            
+            .process-steps::before {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links, .theme-toggle {
+                display: none;
+            }
+            
+            .mobile-menu {
+                display: block;
+            }
+            
+            .hero {
+                text-align: center;
+                padding-top: 120px;
+            }
+            
+            .hero-image {
+                position: relative;
+                width: 100%;
+                max-width: 500px;
+                margin: 2rem auto 0;
+                transform: none;
+            }
+            
+            .hero-btns {
+                justify-content: center;
+            }
+            
+            .portfolio-grid, .services-grid, .pricing-grid, .blog-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-card.featured {
+                transform: none;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            section {
+                padding: 70px 0;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+            
+            .hero-btns {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+    </style>
 </head>
-<body data-theme="dark">
-  <div class="container" id="top">
-    <header aria-label="Main header">
-      <div class="nav">
-        <div class="brand">
-          <div class="logo" aria-hidden>CS</div>
-          <div>
-            <div style="font-weight:700">Charles Semakula</div>
-            <div class="small muted">Web Designer · Front-end Developer</div>
-          </div>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <a href="#" class="logo">Alex Morgan</a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#portfolio">Portfolio</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#testimonials">Testimonials</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+            <div class="mobile-menu" id="mobileMenu">
+                <i class="fas fa-bars"></i>
+            </div>
         </div>
-
-        <nav aria-label="Primary navigation">
-          <ul>
-            <li><a href="#portfolio" class="navlink">Portfolio</a></li>
-            <li><a href="#services" class="navlink">Services</a></li>
-            <li><a href="#pricing" class="navlink">Pricing</a></li>
-            <li><a href="#blog" class="navlink">Blog</a></li>
-            <li><a href="#contact" class="btn">Hire Me</a></li>
-          </ul>
-        </nav>
-      </div>
     </header>
 
-    <main>
-      <!-- HERO -->
-      <section class="hero" id="home">
-        <div>
-          <span class="kicker">Available for new projects</span>
-          <h1>
-            I design modern websites that <span class="typed" id="typed">load fast</span>
-          </h1>
-          <p class="lead">I build accessible, SEO-friendly websites & e-commerce stores for startups and local businesses. My sites are performance-first and designed to convert.</p>
-          <div class="hero-cta">
-            <a class="btn" href="#contact">Start a project</a>
-            <a class="small muted" href="#portfolio">View work</a>
-          </div>
-
-          <div class="features" aria-hidden>
-            <div class="feature"><strong>Performance</strong><div class="small muted">Lighthouse-friendly builds</div></div>
-            <div class="feature"><strong>Accessibility</strong><div class="small muted">WCAG-conscious UI</div></div>
-            <div class="feature"><strong>Responsive</strong><div class="small muted">Mobile-first designs</div></div>
-            <div class="feature"><strong>Conversion</strong><div class="small muted">Optimised landing pages</div></div>
-          </div>
-        </div>
-
-        <aside class="mockup" aria-hidden>
-          <picture>
-            <source srcset="https://via.placeholder.com/1200x800?text=Mockup+Large 1200w, https://via.placeholder.com/800x600?text=Mockup+Med 800w" sizes="(max-width:600px) 100vw, 420px">
-            <img src="https://via.placeholder.com/800x600?text=Portfolio+Mockup" alt="Website mockup screenshot">
-          </picture>
-        </aside>
-      </section>
-
-      <!-- SERVICES -->
-      <section id="services">
-        <h2>Services</h2>
-        <p class="muted small">Design & build packages — or a tailor-made solution.</p>
-        <div class="features" style="margin-top:12px">
-          <div class="feature"><strong>UI/UX Design</strong><div class="small muted">Figma wireframes & prototypes</div></div>
-          <div class="feature"><strong>Front-end Development</strong><div class="small muted">HTML/CSS/JavaScript, accessible components</div></div>
-          <div class="feature"><strong>E-commerce</strong><div class="small muted">Shopify, WooCommerce or custom</div></div>
-          <div class="feature"><strong>SEO & Analytics</strong><div class="small muted">On-page SEO & analytics setup</div></div>
-        </div>
-      </section>
-
-      <!-- PORTFOLIO -->
-      <section id="portfolio">
-        <div style="display:flex;justify-content:space-between;align-items:end">
-          <div>
-            <h2>Selected Projects</h2>
-            <p class="muted small">Filter the gallery to find relevant projects.</p>
-          </div>
-          <div class="toolbar" role="toolbar" aria-label="Project filters">
-            <button class="filter" data-filter="*">All</button>
-            <button class="filter" data-filter="landing">Landing</button>
-            <button class="filter" data-filter="ecommerce">E‑commerce</button>
-            <button class="filter" data-filter="cms">CMS</button>
-          </div>
-        </div>
-
-        <div class="grid" id="projects">
-          <!-- Projects: Replace src with your screenshots (use srcset + webp) -->
-          <article class="project" data-type="landing">
-            <img loading="lazy" src="https://via.placeholder.com/800x600?text=EcoFarm" alt="EcoFarm landing screenshot">
-            <div class="meta"><div><strong>EcoFarm</strong><div class="small muted">Landing Page</div></div><div><span class="small muted">HTML/CSS</span></div></div>
-            <div style="margin-top:8px;display:flex;gap:8px"><button class="btn" data-case="EcoFarm" data-img="https://via.placeholder.com/1200x700?text=EcoFarm+Large">View case</button><a class="small muted" href="#">Live</a></div>
-          </article>
-
-          <article class="project" data-type="cms">
-            <img loading="lazy" src="https://via.placeholder.com/800x600?text=College+Gallery" alt="College gallery screenshot">
-            <div class="meta"><div><strong>Central College</strong><div class="small muted">CMS / Gallery</div></div><div><span class="small muted">WordPress</span></div></div>
-            <div style="margin-top:8px;display:flex;gap:8px"><button class="btn" data-case="Central College" data-img="https://via.placeholder.com/1200x700?text=College+Large">View case</button><a class="small muted" href="#">Live</a></div>
-          </article>
-
-          <article class="project" data-type="ecommerce">
-            <img loading="lazy" src="https://via.placeholder.com/800x600?text=Ecom+Store" alt="Ecommerce site screenshot">
-            <div class="meta"><div><strong>Ecom Store</strong><div class="small muted">Shopify</div></div><div><span class="small muted">E‑commerce</span></div></div>
-            <div style="margin-top:8px;display:flex;gap:8px"><button class="btn" data-case="Ecom Store" data-img="https://via.placeholder.com/1200x700?text=Ecom+Large">View case</button><a class="small muted" href="#">Live</a></div>
-          </article>
-
-          <article class="project" data-type="landing">
-            <img loading="lazy" src="https://via.placeholder.com/800x600?text=SaaS+Landing" alt="SaaS landing screenshot">
-            <div class="meta"><div><strong>SaaS Landing</strong><div class="small muted">Growth Landing</div></div><div><span class="small muted">HTML/JS</span></div></div>
-            <div style="margin-top:8px;display:flex;gap:8px"><button class="btn" data-case="SaaS Landing" data-img="https://via.placeholder.com/1200x700?text=SaaS+Large">View case</button><a class="small muted" href="#">Live</a></div>
-          </article>
-
-          <article class="project" data-type="ecommerce">
-            <img loading="lazy" src="https://via.placeholder.com/800x600?text=Shop+UX" alt="Shop UX screenshot">
-            <div class="meta"><div><strong>Shop UX</strong><div class="small muted">Checkout optimised</div></div><div><span class="small muted">Shopify</span></div></div>
-            <div style="margin-top:8px;display:flex;gap:8px"><button class="btn" data-case="Shop UX" data-img="https://via.placeholder.com/1200x700?text=Shop+Large">View case</button><a class="small muted" href="#">Live</a></div>
-          </article>
-
-          <article class="project" data-type="cms">
-            <img loading="lazy" src="https://via.placeholder.com/800x600?text=Restaurant+Site" alt="Restaurant site screenshot">
-            <div class="meta"><div><strong>Celestial Africa</strong><div class="small muted">Restaurant</div></div><div><span class="small muted">WordPress</span></div></div>
-            <div style="margin-top:8px;display:flex;gap:8px"><button class="btn" data-case="Celestial Africa" data-img="https://via.placeholder.com/1200x700?text=Celestial+Large">View case</button><a class="small muted" href="#">Live</a></div>
-          </article>
-        </div>
-      </section>
-
-      <!-- PRICING -->
-      <section id="pricing">
-        <h2>Pricing</h2>
-        <p class="muted small">Simple packages to get started. Custom quotes available.</p>
-        <div class="pricing" style="margin-top:12px">
-          <div class="price"><h3>Starter</h3><div class="muted small">1-page landing</div><div style="margin-top:10px;font-weight:800">£250</div><p class="small muted">Fast single-page sites with contact forms.</p></div>
-          <div class="price"><h3>Business</h3><div class="muted small">Up to 5 pages</div><div style="margin-top:10px;font-weight:800">£850</div><p class="small muted">CMS, SEO basics and analytics.</p></div>
-          <div class="price"><h3>Premium</h3><div class="muted small">Custom & E‑commerce</div><div style="margin-top:10px;font-weight:800">£2200+</div><p class="small muted">Custom integrations and advanced features.</p></div>
-        </div>
-      </section>
-
-      <!-- BLOG -->
-      <section id="blog">
-        <h2>Articles</h2>
-        <p class="muted small">Short guides & best practices.</p>
-        <div class="articles" style="margin-top:12px">
-          <article class="card">
-            <h4>Speed up images for the web</h4>
-            <div class="small muted">Image formats, compression, and lazy-loading.</div>
-          </article>
-          <article class="card">
-            <h4>Design patterns that convert</h4>
-            <div class="small muted">Microcopy, CTA placement, and trust signals.</div>
-          </article>
-        </div>
-      </section>
-
-      <!-- CONTACT -->
-      <section id="contact">
-        <h2>Contact & Book</h2>
-        <p class="muted small">Tell me about your project — I'll reply within 24 hours.</p>
-        <div class="contact-grid" style="margin-top:12px">
-          <form class="card" id="contact-form" aria-label="Contact form">
-            <label class="small" for="name">Your name</label>
-            <input id="name" name="name" required placeholder="Full name">
-            <label class="small" for="email">Email</label>
-            <input id="email" name="email" type="email" required placeholder="you@example.com">
-            <label class="small" for="type">Project type</label>
-            <select id="type" name="type"><option>Landing page</option><option>Business site</option><option>E‑commerce</option><option>Other</option></select>
-            <label class="small" for="message">Project details</label>
-            <textarea id="message" name="message" rows="6" placeholder="Brief description"></textarea>
-            <div style="display:flex;gap:8px;margin-top:10px">
-              <button type="submit">Send message</button>
-              <a class="pill muted small" id="whatsapp-link" href="#">WhatsApp</a>
-              <a class="pill muted small" href="#" id="download-cv">Download CV</a>
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Creating Digital Experiences That Drive Results</h1>
+                <p>I'm Alex Morgan, a web designer and developer specializing in creating beautiful, functional websites that help businesses grow and succeed in the digital world.</p>
+                <div class="hero-btns">
+                    <a href="#portfolio" class="btn">View My Work</a>
+                    <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <h3>75+</h3>
+                        <p>Projects Completed</p>
+                    </div>
+                    <div class="stat">
+                        <h3>5+</h3>
+                        <p>Years Experience</p>
+                    </div>
+                    <div class="stat">
+                        <h3>98%</h3>
+                        <p>Client Satisfaction</p>
+                    </div>
+                </div>
             </div>
-          </form>
-
-          <aside class="card">
-            <h3>Quick info</h3>
-            <p class="small muted">Based in Uganda · Remote worldwide</p>
-            <h4 style="margin-top:12px">Availability</h4>
-            <p class="small muted">Accepting new projects — book a free 15 min call.</p>
-            <a class="btn" href="#contact">Book a call</a>
-          </aside>
+            <div class="hero-image">
+                <div style="width:100%;height:400px;background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);display:flex;align-items:center;justify-content:center;color:white;font-size:1.5rem;font-weight:600;">
+                    Designer Portfolio
+                </div>
+            </div>
         </div>
-      </section>
-    </main>
+    </section>
 
+    <!-- Portfolio Section -->
+    <section class="portfolio" id="portfolio">
+        <div class="container">
+            <h2>My Portfolio</h2>
+            <div class="portfolio-filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="web-design">Web Design</button>
+                <button class="filter-btn" data-filter="ecommerce">E-commerce</button>
+                <button class="filter-btn" data-filter="branding">Branding</button>
+            </div>
+            <div class="portfolio-grid">
+                <div class="portfolio-item" data-category="web-design">
+                    <div class="portfolio-img" style="background:linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        Modern Business Website
+                    </div>
+                    <div class="portfolio-info">
+                        <h3>Corporate Business Platform</h3>
+                        <p>A responsive website for a growing tech company with custom CMS integration.</p>
+                        <div class="portfolio-tags">
+                            <span class="tag">Web Design</span>
+                            <span class="tag">UI/UX</span>
+                            <span class="tag">WordPress</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-category="ecommerce">
+                    <div class="portfolio-img" style="background:linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        E-commerce Store
+                    </div>
+                    <div class="portfolio-info">
+                        <h3>Fashion Retail Store</h3>
+                        <p>Full e-commerce solution with inventory management and payment integration.</p>
+                        <div class="portfolio-tags">
+                            <span class="tag">E-commerce</span>
+                            <span class="tag">Shopify</span>
+                            <span class="tag">Payment Gateway</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-category="branding">
+                    <div class="portfolio-img" style="background:linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                        Brand Identity
+                    </div>
+                    <div class="portfolio-info">
+                        <h3>Startup Brand Package</h3>
+                        <p>Complete branding solution including logo, style guide, and marketing materials.</p>
+                        <div class="portfolio-tags">
+                            <span class="tag">Branding</span>
+                            <span class="tag">Logo Design</span>
+                            <span class="tag">Visual Identity</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-category="web-design">
+                    <div class="portfolio-img" style="background:linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                        SaaS Dashboard
+                    </div>
+                    <div class="portfolio-info">
+                        <h3>Analytics Dashboard UI</h3>
+                        <p>User interface design for a data analytics platform with complex data visualization.</p>
+                        <div class="portfolio-tags">
+                            <span class="tag">Web Design</span>
+                            <span class="tag">Dashboard</span>
+                            <span class="tag">UI/UX</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-category="ecommerce">
+                    <div class="portfolio-img" style="background:linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                        Online Marketplace
+                    </div>
+                    <div class="portfolio-info">
+                        <h3>Multi-Vendor Marketplace</h3>
+                        <p>Custom marketplace platform connecting local artisans with customers worldwide.</p>
+                        <div class="portfolio-tags">
+                            <span class="tag">E-commerce</span>
+                            <span class="tag">Marketplace</span>
+                            <span class="tag">Web App</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="portfolio-item" data-category="branding">
+                    <div class="portfolio-img" style="background:linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);">
+                        Restaurant Branding
+                    </div>
+                    <div class="portfolio-info">
+                        <h3>Gourmet Restaurant Identity</h3>
+                        <p>Complete visual identity for an upscale restaurant including menu design and packaging.</p>
+                        <div class="portfolio-tags">
+                            <span class="tag">Branding</span>
+                            <span class="tag">Print Design</span>
+                            <span class="tag">Packaging</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <h2>About Me</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Hello! I'm Alex Morgan, a passionate web designer and developer with over 5 years of experience creating digital solutions that help businesses thrive online.</p>
+                    <p>My journey began with a degree in Graphic Design, but I quickly discovered my love for the intersection of design and technology. Since then, I've worked with startups, small businesses, and large corporations to create websites that are not only visually appealing but also highly functional and user-friendly.</p>
+                    <p>I believe that great design should solve problems, tell stories, and create meaningful connections between brands and their audiences. My approach combines strategic thinking with creative execution to deliver results that exceed expectations.</p>
+                    <div class="skills">
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span>UI/UX Design</span>
+                                <span>95%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span>Frontend Development</span>
+                                <span>90%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span>Brand Identity</span>
+                                <span>85%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span>WordPress Development</span>
+                                <span>80%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 80%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <div style="width:100%;height:500px;background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);display:flex;align-items:center;justify-content:center;color:white;font-size:1.5rem;font-weight:600;">
+                        Professional Photo
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="container">
+            <h2>My Services</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <h3>UI/UX Design</h3>
+                    <p>Creating intuitive and engaging user interfaces that provide exceptional user experiences across all devices and platforms.</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> User Research & Personas</li>
+                        <li><i class="fas fa-check"></i> Wireframing & Prototyping</li>
+                        <li><i class="fas fa-check"></i> Interactive Design</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>Web Development</h3>
+                    <p>Building responsive, fast, and secure websites using the latest technologies and best practices in web development.</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Frontend Development</li>
+                        <li><i class="fas fa-check"></i> CMS Integration</li>
+                        <li><i class="fas fa-check"></i> E-commerce Solutions</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3>Brand Identity</h3>
+                    <p>Developing cohesive visual identities that communicate your brand's values and resonate with your target audience.</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Logo Design</li>
+                        <li><i class="fas fa-check"></i> Brand Guidelines</li>
+                        <li><i class="fas fa-check"></i> Marketing Materials</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="pricing">
+                <h2>Pricing Plans</h2>
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <h3>Starter</h3>
+                        <div class="price">$1,499<span>/project</span></div>
+                        <p>Perfect for small businesses and startups looking to establish their online presence.</p>
+                        <ul class="pricing-features">
+                            <li><i class="fas fa-check"></i> Custom Website Design</li>
+                            <li><i class="fas fa-check"></i> 5 Page Website</li>
+                            <li><i class="fas fa-check"></i> Mobile Responsive</li>
+                            <li><i class="fas fa-check"></i> Basic SEO Setup</li>
+                            <li><i class="fas fa-check"></i> 2 Revisions</li>
+                        </ul>
+                        <a href="#contact" class="btn btn-secondary">Get Started</a>
+                    </div>
+                    <div class="pricing-card featured">
+                        <div class="popular-badge">Most Popular</div>
+                        <h3>Professional</h3>
+                        <div class="price">$2,999<span>/project</span></div>
+                        <p>Ideal for growing businesses that need a comprehensive online solution.</p>
+                        <ul class="pricing-features">
+                            <li><i class="fas fa-check"></i> Everything in Starter</li>
+                            <li><i class="fas fa-check"></i> Up to 10 Pages</li>
+                            <li><i class="fas fa-check"></i> E-commerce Functionality</li>
+                            <li><i class="fas fa-check"></i> Advanced SEO</li>
+                            <li><i class="fas fa-check"></i> CMS Integration</li>
+                            <li><i class="fas fa-check"></i> 4 Revisions</li>
+                        </ul>
+                        <a href="#contact" class="btn">Get Started</a>
+                    </div>
+                    <div class="pricing-card">
+                        <h3>Enterprise</h3>
+                        <div class="price">$4,999<span>/project</span></div>
+                        <p>For large organizations requiring complex, custom web solutions.</p>
+                        <ul class="pricing-features">
+                            <li><i class="fas fa-check"></i> Everything in Professional</li>
+                            <li><i class="fas fa-check"></i> Unlimited Pages</li>
+                            <li><i class="fas fa-check"></i> Custom Web Applications</li>
+                            <li><i class="fas fa-check"></i> API Integrations</li>
+                            <li><i class="fas fa-check"></i> Priority Support</li>
+                            <li><i class="fas fa-check"></i> Unlimited Revisions</li>
+                        </ul>
+                        <a href="#contact" class="btn btn-secondary">Get Started</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials" id="testimonials">
+        <div class="container">
+            <h2>What My Clients Say</h2>
+            <div class="testimonials-slider">
+                <div class="testimonials-container" id="testimonialsContainer">
+                    <div class="testimonial">
+                        <div class="testimonial-img">
+                            JS
+                        </div>
+                        <p class="testimonial-text">"Alex transformed our outdated website into a modern, user-friendly platform that has significantly increased our conversion rates. His attention to detail and understanding of our business needs was exceptional."</p>
+                        <p class="testimonial-author">Jessica Smith</p>
+                        <p class="testimonial-role">Marketing Director, TechSolutions Inc.</p>
+                    </div>
+                    <div class="testimonial">
+                        <div class="testimonial-img">
+                            MR
+                        </div>
+                        <p class="testimonial-text">"Working with Alex was a game-changer for our e-commerce business. He not only designed a beautiful store but also implemented advanced functionality that has streamlined our operations."</p>
+                        <p class="testimonial-author">Michael Rodriguez</p>
+                        <p class="testimonial-role">Founder, UrbanStyle Co.</p>
+                    </div>
+                    <div class="testimonial">
+                        <div class="testimonial-img">
+                            SC
+                        </div>
+                        <p class="testimonial-text">"Alex's branding work completely revitalized our company image. The new visual identity has received countless compliments and has helped us stand out in a competitive market."</p>
+                        <p class="testimonial-author">Sarah Chen</p>
+                        <p class="testimonial-role">CEO, GreenLeaf Organics</p>
+                    </div>
+                </div>
+                <div class="slider-controls">
+                    <button class="slider-btn" id="prevTestimonial">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="slider-btn" id="nextTestimonial">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Section -->
+    <section class="process">
+        <div class="container">
+            <h2>My Work Process</h2>
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <h3>Discovery</h3>
+                    <p>I begin by understanding your business, goals, target audience, and project requirements through detailed discussions and research.</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <h3>Strategy & Planning</h3>
+                    <p>Based on the discovery phase, I develop a comprehensive strategy and project plan with clear milestones and deliverables.</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <h3>Design & Development</h3>
+                    <p>I create wireframes and prototypes for your approval before moving into the full design and development phase.</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <h3>Testing & Launch</h3>
+                    <p>After rigorous testing across devices and browsers, I deploy your project and provide training for ongoing management.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section class="blog" id="blog">
+        <div class="container">
+            <h2>Latest From My Blog</h2>
+            <div class="blog-grid">
+                <div class="blog-card">
+                    <div class="blog-img" style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        Web Design Trends
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <span><i class="far fa-calendar"></i> June 15, 2023</span>
+                            <span><i class="far fa-clock"></i> 5 min read</span>
+                        </div>
+                        <h3 class="blog-title">Top Web Design Trends to Watch in 2023</h3>
+                        <p class="blog-excerpt">Discover the emerging design trends that are shaping the future of web experiences and user interfaces.</p>
+                        <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="blog-card">
+                    <div class="blog-img" style="background:linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        SEO Strategies
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <span><i class="far fa-calendar"></i> May 28, 2023</span>
+                            <span><i class="far fa-clock"></i> 7 min read</span>
+                        </div>
+                        <h3 class="blog-title">How to Improve Your Website's SEO in 2023</h3>
+                        <p class="blog-excerpt">Learn actionable strategies to boost your website's search engine rankings and drive organic traffic.</p>
+                        <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                <div class="blog-card">
+                    <div class="blog-img" style="background:linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                        UX Principles
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <span><i class="far fa-calendar"></i> April 12, 2023</span>
+                            <span><i class="far fa-clock"></i> 6 min read</span>
+                        </div>
+                        <h3 class="blog-title">5 UX Principles Every Designer Should Follow</h3>
+                        <p class="blog-excerpt">Explore the fundamental principles of user experience design that create intuitive and engaging digital products.</p>
+                        <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq">
+        <div class="container">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How long does a typical website project take?
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>The timeline for a website project varies depending on the scope and complexity. A basic website typically takes 2-4 weeks, while more complex projects with custom functionality can take 6-8 weeks or longer. I provide a detailed project timeline during our initial consultation.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Do you provide website maintenance after launch?
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, I offer ongoing maintenance packages to ensure your website remains secure, up-to-date, and performing optimally. These packages include regular updates, security monitoring, backups, and technical support.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        What platforms do you work with?
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>I have experience with various platforms including WordPress, Shopify, Webflow, and custom solutions. I'll recommend the platform that best suits your specific needs, budget, and technical requirements.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Can you help with existing website redesigns?
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Absolutely! I frequently work with clients to redesign and improve existing websites. This process typically involves evaluating the current site, identifying areas for improvement, and implementing a new design that better aligns with your goals.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        What is your payment structure?
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>I typically require a 50% deposit to begin work, with the remaining 50% due upon project completion. For larger projects, I can arrange a payment plan with milestones. All payment details are clearly outlined in our project agreement.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <h2>Get In Touch</h2>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h3>Location</h3>
+                            <p>San Francisco, CA</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h3>Email</h3>
+                            <p>hello@alexmorgan.design</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div>
+                            <h3>Phone</h3>
+                            <p>+1 (555) 123-4567</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div>
+                            <h3>Availability</h3>
+                            <p>Monday - Friday: 9am - 6pm PST</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name" class="form-label">Your Name</label>
+                            <input type="text" id="name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="form-label">Your Email</label>
+                            <input type="email" id="email" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject" class="form-label">Subject</label>
+                            <input type="text" id="subject" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message" class="form-label">Your Message</label>
+                            <textarea id="message" class="form-control" required></textarea>
+                        </div>
+                        <button type="submit" class="btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
     <footer>
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
-        <div class="small muted">© 2025 Charles Semakula</div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <a class="small muted" href="#">Privacy</a>
-          <a class="small muted" href="#">Terms</a>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-about">
+                    <a href="#" class="footer-logo">Alex Morgan</a>
+                    <p class="footer-about-text">Creating beautiful, functional websites that help businesses succeed in the digital world.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-dribbble"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-behance"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h3 class="footer-heading">Quick Links</h3>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#portfolio">Portfolio</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3 class="footer-heading">Services</h3>
+                    <ul>
+                        <li><a href="#">UI/UX Design</a></li>
+                        <li><a href="#">Web Development</a></li>
+                        <li><a href="#">Brand Identity</a></li>
+                        <li><a href="#">E-commerce</a></li>
+                        <li><a href="#">Website Maintenance</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h3 class="footer-heading">Contact</h3>
+                    <ul>
+                        <li><a href="mailto:hello@alexmorgan.design">hello@alexmorgan.design</a></li>
+                        <li><a href="tel:+15551234567">+1 (555) 123-4567</a></li>
+                        <li><a href="#">San Francisco, CA</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Alex Morgan. All Rights Reserved.</p>
+            </div>
         </div>
-      </div>
     </footer>
-  </div>
 
-  <!-- Modal -->
-  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="modal-card card">
-      <button id="modal-close" aria-label="Close" style="float:right;border:0;background:transparent;color:var(--muted);font-size:20px;cursor:pointer">✕</button>
-      <h3 id="modal-title">Project</h3>
-      <img id="modal-img" src="https://via.placeholder.com/1200x700" alt="" style="width:100%;border-radius:8px;margin-top:12px">
-      <p id="modal-desc" class="muted small" style="margin-top:10px"></p>
-    </div>
-  </div>
+    <script>
+        // Dark/Light Mode Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
 
-  <script>
-    /* ====== Config - replace these ====== */
-    const FORM_ENDPOINT = 'https://formspree.io/f/your-form-endpoint'; // <-- replace with Formspree or your endpoint
-    const CONTACT_WHATSAPP_NUMBER = '256700000000'; // <-- replace with your WhatsApp number (international, no +)
-
-    /* ====== Theme: system preference + toggle ====== */
-    (function(){
-      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const saved = localStorage.getItem('theme');
-      if(saved) document.body.setAttribute('data-theme', saved);
-      else if(prefersDark) document.body.setAttribute('data-theme','dark');
-      else document.body.setAttribute('data-theme','light');
-    })();
-
-    /* ====== Typed headline (very small) ====== */
-    (function(){
-      const words = ['load fast','convert visitors','look beautiful','work on mobile'];
-      let i=0; let idx=0; let out=''; const el = document.getElementById('typed');
-      function step(){
-        const word = words[i];
-        if(idx < word.length){ out += word[idx++]; el.textContent = out; setTimeout(step, 80); }
-        else { setTimeout(()=>{ idx=0; out=''; i=(i+1)%words.length; step(); }, 1200); }
-      }
-      if(el) step();
-    })();
-
-    /* ====== Smooth scroll & active nav ====== */
-    document.querySelectorAll('a[href^="#"]').forEach(a=>{
-      a.addEventListener('click', e=>{
-        const href = a.getAttribute('href');
-        if(href.startsWith('#')){
-          e.preventDefault();
-          const t = document.querySelector(href);
-          if(t) t.scrollIntoView({behavior:'smooth',block:'start'});
+        // Check for saved theme preference or respect OS preference
+        const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-mode');
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
         }
-      })
-    });
 
-    // Active link on scroll
-    const sections = document.querySelectorAll('main section[id]');
-    function onScroll(){
-      const scroll = window.scrollY + 120;
-      sections.forEach(s=>{
-        const top = s.offsetTop; const h = s.offsetHeight;
-        const id = s.id;
-        const link = document.querySelector('nav a[href="#'+id+'"]');
-        if(link) link.classList.toggle('active', scroll >= top && scroll < top + h);
-      })
-    }
-    window.addEventListener('scroll', onScroll); onScroll();
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                localStorage.setItem('theme', 'light');
+            }
+        });
 
-    /* ====== Portfolio filtering (simple) ====== */
-    document.querySelectorAll('.filter').forEach(btn=> btn.addEventListener('click', ()=>{
-      const f = btn.getAttribute('data-filter');
-      document.querySelectorAll('.project').forEach(p=>{
-        if(f === '*' || p.dataset.type === f) p.style.display = '';
-        else p.style.display = 'none';
-      });
-    }));
+        // Portfolio Filtering
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const portfolioItems = document.querySelectorAll('.portfolio-item');
 
-    /* ====== Modal case study ====== */
-    const modal = document.getElementById('modal');
-    document.querySelectorAll('[data-case]').forEach(b=> b.addEventListener('click', ()=>{
-      const title = b.getAttribute('data-case');
-      const img = b.getAttribute('data-img');
-      document.getElementById('modal-title').textContent = title;
-      document.getElementById('modal-img').src = img;
-      document.getElementById('modal-desc').textContent = 'Short case summary. Replace this with the project problem, solution, and results.';
-      modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
-    }));
-    document.getElementById('modal-close').addEventListener('click', ()=>{ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); });
-    modal.addEventListener('click', e=>{ if(e.target === modal) { modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); }});
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                // Add active class to clicked button
+                button.classList.add('active');
+                
+                const filterValue = button.getAttribute('data-filter');
+                
+                portfolioItems.forEach(item => {
+                    if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
+                        item.style.display = 'block';
+                        setTimeout(() => {
+                            item.style.opacity = '1';
+                            item.style.transform = 'translateY(0)';
+                        }, 100);
+                    } else {
+                        item.style.opacity = '0';
+                        item.style.transform = 'translateY(20px)';
+                        setTimeout(() => {
+                            item.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            });
+        });
 
-    /* ====== Contact form (Formspree fallback to mailto) ====== */
-    document.getElementById('contact-form').addEventListener('submit', async (e)=>{
-      e.preventDefault();
-      const form = e.currentTarget; const data = new FormData(form);
-      const payload = Object.fromEntries(data.entries());
-      try{
-        const res = await fetch(FORM_ENDPOINT, {method:'POST',headers:{'Accept':'application/json'},body:JSON.stringify(payload)});
-        if(res.ok) { alert('Thanks! I will reply within 24 hours.'); form.reset(); }
-        else throw new Error('Form failed');
-      }catch(err){
-        // fallback to mailto
-        const subject = encodeURIComponent('New project from ' + payload.name);
-        const body = encodeURIComponent('Name: '+payload.name+'
-Email: '+payload.email+'
-Type: '+payload.type+'
+        // Testimonials Slider
+        const testimonialsContainer = document.getElementById('testimonialsContainer');
+        const prevTestimonial = document.getElementById('prevTestimonial');
+        const nextTestimonial = document.getElementById('nextTestimonial');
+        let testimonialIndex = 0;
 
-'+payload.message);
-        window.location.href = 'mailto:hello@example.com?subject='+subject+'&body='+body;
-      }
-    });
+        function showTestimonial(index) {
+            const testimonials = document.querySelectorAll('.testimonial');
+            if (index >= testimonials.length) testimonialIndex = 0;
+            if (index < 0) testimonialIndex = testimonials.length - 1;
+            
+            testimonialsContainer.style.transform = `translateX(-${testimonialIndex * 100}%)`;
+        }
 
-    /* ====== WhatsApp link ====== */
-    document.getElementById('whatsapp-link').href = 'https://wa.me/'+CONTACT_WHATSAPP_NUMBER+'?text='+encodeURIComponent('Hi Charles, I\'d like to discuss a website project.');
+        prevTestimonial.addEventListener('click', () => {
+            testimonialIndex--;
+            showTestimonial(testimonialIndex);
+        });
 
-    /* ====== CV download (placeholder) ====== */
-    document.getElementById('download-cv').addEventListener('click', (e)=>{ e.preventDefault(); alert('Replace # with your CV file path or upload the PDF and set the href.'); });
+        nextTestimonial.addEventListener('click', () => {
+            testimonialIndex++;
+            showTestimonial(testimonialIndex);
+        });
 
-    /* ====== Tiny performance hint: lazy-loading images are used via loading="lazy" and srcset for larger images. ====== */
-  </script>
+        // Auto-rotate testimonials
+        setInterval(() => {
+            testimonialIndex++;
+            showTestimonial(testimonialIndex);
+        }, 5000);
+
+        // FAQ Accordion
+        const faqItems = document.querySelectorAll('.faq-item');
+
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            
+            question.addEventListener('click', () => {
+                // Close all other items
+                faqItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+                
+                // Toggle current item
+                item.classList.toggle('active');
+            });
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenu = document.getElementById('mobileMenu');
+        const navLinks = document.querySelector('.nav-links');
+        const themeToggleMobile = document.querySelector('.theme-toggle');
+
+        mobileMenu.addEventListener('click', () => {
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+            themeToggleMobile.style.display = themeToggleMobile.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Form Submission
+        const contactForm = document.getElementById('contactForm');
+        
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            
+            // In a real application, you would send this data to a server
+            // For this example, we'll just show an alert
+            alert(`Thank you for your message, ${name}! I'll get back to you soon.`);
+            
+            // Reset form
+            contactForm.reset();
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    if (window.innerWidth <= 768) {
+                        navLinks.style.display = 'none';
+                        themeToggleMobile.style.display = 'none';
+                    }
+                }
+            });
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.1)';
+            } else {
+                header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+            }
+        });
+    </script>
 </body>
 </html>
